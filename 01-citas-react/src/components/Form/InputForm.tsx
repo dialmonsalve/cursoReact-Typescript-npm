@@ -1,12 +1,12 @@
 type props = {
-	title?:string,
+	title:string,
 	name:string,
 	type:string,
 	id:string,
 	value:string,
 	handleChange(e:React.ChangeEvent<HTMLInputElement> ):void
 }
-export const InputForm = ({title, name, type,  id, value,  handleChange}:props) => {
+export const InputForm = ({title, name, type,  id, value, handleChange}:props) => {
 	return (
 		<div className="mb-5">
 					<label htmlFor={ id } className="block text-gray-700 uppercase font-bold" 
@@ -21,7 +21,6 @@ export const InputForm = ({title, name, type,  id, value,  handleChange}:props) 
 						name={ name}
 						onChange={ handleChange }
 						value={value}
-						
 					/>
 				</div>
 	)

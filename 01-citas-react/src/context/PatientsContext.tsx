@@ -1,28 +1,22 @@
 import {  createContext } from "react";
-import { IsForm, Patients } from "../interfaces/IsForm";
-interface Patient{}
+import { patientForm, IsPatient } from "../interfaces";
 
 interface PatientContextType {
-	patient:Patient,
-	patients:Patients[],	
-	onAddPatient(form:IsForm):void
-	onEditPatient(patient:Patient):void,
-	onDelete(id:string):void,
+	patientState:IsPatient[],	
+	editPatient:IsPatient,
+	onAddPatient(patient:IsPatient):void
+	onEditForm(patient:IsPatient):void
+	onDeletePatient(id:string):void
+	onUpdatePatient(patient:IsPatient):void,
+	
 }
-export const patients:PatientContextType ={
-	patient: {},
-	patients: [{
-		id:'',
-		pet: '',
-		area: '',
-		date: '',
-		email: '',
-		owner: ''
-	}],
-	onAddPatient: function (): void {	},
-	onEditPatient: function (): void {	},
-	onDelete: function (): void {	},
+const patients:PatientContextType ={
+	patientState: [patientForm],
+	onAddPatient: function (): void { },
+	onEditForm: function (): void { },
+	onDeletePatient: function (): void { },
+	onUpdatePatient: function (): void { },
+	editPatient: {id:'', date:'',email:'', owner:'', pet:'', area:'' }
 }
-
 
 export const PatientsContext = createContext<PatientContextType>(patients) 

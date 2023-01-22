@@ -1,16 +1,17 @@
-import { useContext } from "react"
-import { PatientsContext } from "../context/PatientsContext"
-import { Patient } from "./Patient"
+import { useContext } from 'react'
+
+import { PatientsContext } from '../../context'
+import { Patient } from '..'
 
 export const PatientList = () => {
 
-	const { patients } = useContext(PatientsContext)	
+	const { patientState } = useContext(PatientsContext)	
 
 	return (
 		<div className="md:w-1/2 lg:w-3/5 md:h-screen overflow-y-scroll">
 
 			{
-				patients && patients.length ? (
+				patientState && patientState.length ? (
 					<>
 						<h2 className="font-black text-3xl text-center">Patient List</h2>
 						<p className="text-xl mt-5 mb-10 text-center">
@@ -19,10 +20,10 @@ export const PatientList = () => {
 						</p>
 
 			{
-				patients.map((pacient)=>(
+				patientState.map((pacient)=>(
 					<Patient
-						key={pacient.id}
-						pacient={pacient}
+						key={ pacient.id }
+						pacient={ pacient }
 						/>
 				))
 			}

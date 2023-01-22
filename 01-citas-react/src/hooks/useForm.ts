@@ -1,37 +1,28 @@
-import { useEffect, useMemo, useState } from "react"
-import { IsForm, IsValidation, Valid } from "../interfaces/IsForm"
+import { useEffect, useMemo, useState } from 'react'
+import { IsPatientValid, IsPatient,  IsFormValidation, patientForm } from '../interfaces/'
 
-const form:IsForm = {
-	pet:'',
-	owner:'',
-	email:'',
-	date:'',
-	area:'',
-}
+export const useForm = (initialForm:IsPatient, formValidations:IsFormValidation={} ) => {
 
-export const useForm = (initialForm:IsForm, formValidations:IsValidation ) => {
-
-	const [formState, setFormState] = useState<IsForm>(form)
-	const [formValidation, setFormValidation] = useState<IsValidation | Valid>({});
-
-	useEffect( () => {
-		createValidators();
-	}, [formState]);
+	const [formState, setFormState] = useState<IsPatient>(patientForm)
+	const [formValidation, setFormValidation] = useState<IsFormValidation | IsPatientValid>({});
 
 	useEffect( () =>{
 		setFormState(initialForm)
 	}, [initialForm])
 
-	const isFormValid = useMemo( () =>{
+	useEffect(() => {
+		createValidator()	
+	}, [formState])
 
-	
+	const isFormValid = useMemo(()=>{
+
 		for (const formValue of Object.keys( formValidation )) {
 			if( formValidation[formValue] !== null ) return false;
 		}
 
 		return true;
-		
-	},[formValidation])	
+
+	},[formValidation])
 
 	const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
 
@@ -42,35 +33,42 @@ export const useForm = (initialForm:IsForm, formValidations:IsValidation ) => {
 		})
 	}
 
+	const createValidator = () =>{
+		const CheckedValues:IsPatientValid = {
+			petValid: "",
+			areaValid: "",
+			dateValid: "",
+			emailValid: "",
+			ownerValid: ""
+		};
+
+		for (const formField of Object.keys(formValidations)) {
+			const [ fn , message ] = formValidations[formField]
+
+			CheckedValues[`${formField}Valid`] = fn(formState[formField]) ? null: message;			
+		};
+
+		setFormValidation(CheckedValues);
+	};
+
 	const onResetForm = () =>{
 		setFormState(initialForm);
 	};
 
-	const createValidators = () =>{
-
-		const formCheckedValues:Valid ={}
-		for (const formField of Object.keys(formValidations)) {
-			const [fn, errorMessage] = formValidations[formField];
-
-			formCheckedValues[`${formField}Valid`] = fn(formState[formField]) ? null : errorMessage
-		}
-
-		setFormValidation( formCheckedValues );
-	}
-
-	const onEditForm = (formState:IsForm) =>{
-		setFormState(formState)
-
-	}
+	const handleEditForm = (formState:{}) =>{
+		setFormState(formState as IsPatient)
+	};
 
 	return {
 		formState,
+		...formState,
 		handleChange,
 		onResetForm,
-		onEditForm,
+		handleEditForm,
 
 		formValidation,
+		...formValidation,
 		isFormValid,
-		
+
 	}
 }

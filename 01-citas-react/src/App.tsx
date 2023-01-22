@@ -1,6 +1,6 @@
-import { Form } from "./components/Form"
-import { Header } from "./components/Header"
-import { PatientList } from "./components/PatientList"
+import { DivForm } from './components/Form'
+import { Header } from './components/Header'
+import { PatientList } from './components/Patient'
 
 export const App = () => {
 	return (
@@ -8,7 +8,7 @@ export const App = () => {
 			<Header/>
 
 			<div className="mt-12 md:flex">			
-				<Form/>
+				<DivForm/>
 				<PatientList/>
 			</div>
 		</div>
