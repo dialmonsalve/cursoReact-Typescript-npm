@@ -1,25 +1,15 @@
-import { IsPatient } from "../../interfaces";
-import { DivError, InputForm } from "./"
-
-type props ={
-	handelSubmit(e:React.FormEvent<HTMLFormElement | HTMLInputElement>):void
-	handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>):void
-	pet:string;
-	petValid:string;
-	owner:string;
-	ownerValid:string;
-	email:string;
-	emailValid:string;
-	date:string;
-	dateValid:string;
-	area:string;
-	areaValid:string;
-	isFormValid:boolean;
-	formSubmitted:boolean;
-	formState:IsPatient
-}
+import { useDivError } from '../../hooks';
+import { props } from '../../interfaces';
+import { InputForm } from './InputForm';
 
 export const Form = ({pet, petValid, owner, ownerValid, email, emailValid, date, dateValid, area, areaValid,formState, handelSubmit, handleChange,  isFormValid, formSubmitted }:props) => {
+
+	const [ PetDiviError ] = useDivError( formSubmitted, petValid, isFormValid)
+	const [ OwnerDiviError ] = useDivError( formSubmitted, ownerValid, isFormValid)
+	const [ EmailDiviError ] = useDivError( formSubmitted, emailValid, isFormValid)
+	const [ DateDiviError ] = useDivError( formSubmitted, dateValid, isFormValid)
+	const [ AreaDiviError ] = useDivError( formSubmitted, areaValid, isFormValid)
+
 	return (
 		<form 
 				onSubmit={ handelSubmit }
@@ -29,40 +19,28 @@ export const Form = ({pet, petValid, owner, ownerValid, email, emailValid, date,
 					title="Pet name"
 					name="pet"
 					type="text"
-					handleChange={handleChange}
+					handleChange={ handleChange }
 					id="pet"
 					value={pet}	/>
-					<DivError
-					message={petValid as string} 
-					error={isFormValid} 
-					formValid={formSubmitted}	
-					/>
+					<PetDiviError />
 
 				<InputForm 
 					title="Owner name"
 					name="owner"
 					type="text"
-					handleChange={handleChange}
+					handleChange={ handleChange }
 					id="owner" 
-					value={owner}	 />
-					<DivError
-					message={ownerValid as string} 
-					error={isFormValid} 
-					formValid={formSubmitted}	
-					/>
+					value={owner}	/>
+					<OwnerDiviError />
 
 				<InputForm 
-					title="email"
+					title={email}
 					name="email"
 					type="email"
 					handleChange={ handleChange } 
 					id="email"
-					value={email}	 />
-					<DivError
-					message={emailValid as string} 
-					error={isFormValid} 
-					formValid={formSubmitted}	
-					/>
+					value={email}	/>
+					<EmailDiviError />
 
 				<InputForm 
 					title="Date"
@@ -70,11 +48,8 @@ export const Form = ({pet, petValid, owner, ownerValid, email, emailValid, date,
 					type="date"
 					handleChange={ handleChange } 
 					id="date"
-					value={date}	 />
-					<DivError
-					message={dateValid as string} 
-					error={isFormValid} 
-					formValid={formSubmitted}	/>
+					value={date} />
+					<DateDiviError />
 
 				<div className="mb-5">
 					<label 
@@ -92,10 +67,7 @@ export const Form = ({pet, petValid, owner, ownerValid, email, emailValid, date,
 							value={area}
 						>
 						</textarea>
-						<DivError
-						message={areaValid as string} 
-						error={isFormValid} 
-						formValid={formSubmitted}	/>
+						<AreaDiviError />
 				</div>
 
 				<input 

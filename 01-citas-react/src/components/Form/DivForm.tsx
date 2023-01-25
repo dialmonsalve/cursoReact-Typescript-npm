@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 
-import { useForm } from '../../hooks';
+import { useDivError, useForm } from '../../hooks';
 import { IsFormValidation, patientForm } from '../../interfaces';
 import { PatientsContext } from '../../context';
 import { Form } from './';
@@ -14,7 +14,7 @@ const formValidations:IsFormValidation = {
 }
 
 export const DivForm = () => {
-	const { editPatient ,patientState, onAddPatient, onUpdatePatient } = useContext(PatientsContext)
+	const { editPatient ,patientState, onAddPatient, onUpdatePatient, onEditForm } = useContext(PatientsContext)
 
 	const [formSubmitted, setFormSubmitted] = useState(false)
 
@@ -26,28 +26,28 @@ export const DivForm = () => {
 	const handelSubmit = (e:React.FormEvent<HTMLFormElement | HTMLInputElement>) =>{
 
 		e.preventDefault();
+		
 		setFormSubmitted(true)
 
 		if( !isFormValid ) return;
 
 		if( formState.id ){
 			onUpdatePatient(formState)
+			onEditForm(patientForm)
 			setFormSubmitted(false)
 		}else{
 			onAddPatient(formState);
-			setFormSubmitted(false)
+			setFormSubmitted(formSubmitted)
 		}
 		onResetForm()
 	}
 
 	useEffect(() => {
-
 		const patientFound = patientState.find(patient => patient.id === editPatient.id)
 
 		if(patientFound){
 			handleEditForm(patientFound)
 		}
-	
 	}, [editPatient.id])
 
 	return (
@@ -77,7 +77,6 @@ export const DivForm = () => {
 				formSubmitted={ formSubmitted }
 				formState={ formState }
 			/>
-
 		</div>
 	)
 }

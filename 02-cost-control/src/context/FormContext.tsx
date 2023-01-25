@@ -12,7 +12,9 @@ const ValidForm: FormContextType ={
 	budget:0,
 	message:'',
 	isvalidBudget:false,
-	handleChange(){},
+	handleChange(e){
+		e.preventDefault()
+	},
 	handleBuget(){},
 }
 

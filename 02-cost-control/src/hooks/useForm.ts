@@ -1,44 +1,78 @@
-import { useEffect, useMemo, useState } from "react"
-import { IsForm } from "../interfaces"
+import { useEffect, useMemo, useState } from 'react';
 
-export const useForm = (initialForm:IsForm) => {
 
-	const [formState, setFormState] = useState<IsForm>(initialForm)
-	const [ isValidForm, setisValidForm ] = useState<string>('')
+export const useForm = < 
+		T extends IsForm<string >, 
+		S extends IsFormValidation<string >
+	> (initialForm:T, formValidations:S) => {
+
+	const [ formState, setFormState] = useState(initialForm);
+	const [ formValidation, setFormValidation] = useState< S >(formValidations)
 
 	useEffect( () =>{
 		setFormState(initialForm)
 	}, [initialForm])
 
-	const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement >)=>{
-		const {name, value} = e.target
+	useEffect(() => {
+		handleValidations()
+	}, [formState])
+
+	const isFormValid = useMemo( () =>{
+		for (const formValue of Object.keys( formValidation )) {
+			if( formValidation[formValue] !== null ) return false;
+		}
+
+		return true;
+		
+	},[formValidation])		
+
+	const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>{
+		const {name, value} = e.target;
 
 		setFormState({
-			...formState,
-			[name]:value.toLowerCase()	
-		})
-	};
+				...formState,
+			[name]: value
+		});
+	}
 
-	const isFormValid = useMemo( ()=>{
-
-		for (const fieldForm of Object.keys(formState)) {
-			if(fieldForm.length <=1) return true	
-			console.log(fieldForm);		
-		}
-		return false
-	},[formState])
-
-	const onResetForm = ()=>{
+	const handleReset = () => {
 		setFormState(initialForm)
 	}
 
-	return {
+	const handleValidations = () => {
+		const checkedValues:IsCheckedFields = {}
+		for (const formField of Object.keys( formValidations) ) {
+
+			const [fn, errorMessage] =  formValidations[`${formField}`]
+
+			checkedValues[`${formField}Valid`] = fn(formState[formField]) ? null : errorMessage
+			//[formField:string]: [(value:T)=>boolean , null | string]
+		}
+		setFormValidation(checkedValues);
+	}
+
+	return{
 		formState,
 		...formState,
-		isValidForm,
-
 		handleChange,
-		onResetForm,
-		isFormValid,
+		handleReset,
+
+		formValidation,
+	...formValidation,
+
+	isFormValid,
 	}
 }
+
+export interface IsForm<T> {
+	[name:string]:T,
+}
+
+export type IsCheckedFields =
+{[field:string]:null | string}
+
+
+export interface IsFormValidation<S>  {
+	[formField:string]: [(value:S)=>boolean , null | string]
+}
+

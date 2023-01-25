@@ -1,4 +1,3 @@
-export * from './Form/DivError'
 export * from './Form/DivForm'
 export * from './Header'
 export * from './Form/InputForm'

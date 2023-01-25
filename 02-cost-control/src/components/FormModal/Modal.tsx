@@ -1,34 +1,34 @@
-import { useState } from 'react'
-
-import { useForm } from '../hooks/useForm'
-import { IsForm } from '../interfaces'
-import { Message } from './Message'
-
-import closeBtn from '../assets/cerrar.svg'
-
+import { useForm } from '../../hooks/useForm'
+import {  IsExpenseForm, validFields } from '../../interfaces'
+import { Message } from '../../helpers/Message'
+import closeBtn from '../../assets/cerrar.svg'
+import { IsCheckFields } from '../../interfaces/isExpenseForm'
 
 type props ={
-	setModal(modal:boolean):void,
 	anmiateModal:boolean,
+	setModal(modal:boolean):void,
 	setAnmiateModal(modal:boolean):void,
-	saveExpense(expense:IsForm):void
+	saveExpense(expense:IsExpenseForm):void
 }
 
-const expenseForm:IsForm={
-	name:'',
-	amount:'',
-	category:''
+export const expenseForm:IsExpenseForm = {
+	name:"",
+	amount:"",
+	category:"",
 }
-export const Modal = ({setModal, anmiateModal, setAnmiateModal, saveExpense }:props) => {
+
+export const validForm: validFields = {
+	name: [(value:string) => value?.length >= 1, "Field name is requiered"],
+	amount: [(value:string) => Number(value) >= 1, "Field amount is requiered"],
+	category: [(value:string) => value.length >= 1, "Field amount is requiered"],
+}
+
+export const Modal = ({anmiateModal, setModal, setAnmiateModal, saveExpense }:props) => {
 
 	const { 
-		formState, 
-		formState:{ 
-			name, amount, category 
-		}, 
-		handleChange ,
-		isFormValid
-	} =useForm(expenseForm)
+		formState, name, amount, category, handleChange, handleReset,
+		formValidation, nameValid, amountValid, categoryValid, isFormValid
+	} =useForm<IsExpenseForm, IsCheckFields>( expenseForm, validForm )
 
 	const hideModal = ()=>{
 		setAnmiateModal(false)		
@@ -37,17 +37,14 @@ export const Modal = ({setModal, anmiateModal, setAnmiateModal, saveExpense }:pr
 		}, 500);
 	}
 
-	const [message, setMessage] = useState<string>('')
-
 	const handleSubmit = (e:React.FormEvent<HTMLFormElement>) =>{
+
 		e.preventDefault();
 
-		if([name.trim(), amount, category].includes('')){
-
-			setMessage('All fields are requierd')
+		if(isFormValid) {
 
 			setTimeout(() => {
-				setMessage('')
+				handleReset()
 			}, 2000);
 			return;
 		}
@@ -70,19 +67,22 @@ export const Modal = ({setModal, anmiateModal, setAnmiateModal, saveExpense }:pr
 				onSubmit={ handleSubmit }	
 			>
 				<legend>New expense</legend>
-				{message && <Message type='error'>{ message }</Message>}
+
 				<div className="campo">
 					<label htmlFor="campo">Name Expense</label>
 					<input
 						id="campo" 
 						type="text"
 						placeholder="Add the expense name"
-						name="name"
 						value={ name }
+						name="name"
 						onChange={handleChange}
 
 					/>
 				</div>
+				{nameValid 
+					&& <Message type='error'>{ nameValid }</Message>
+					}
 
 				<div className="campo">
 					<label htmlFor="cantidad">Amount</label>
@@ -95,11 +95,14 @@ export const Modal = ({setModal, anmiateModal, setAnmiateModal, saveExpense }:pr
 						onChange={handleChange}
 					/>
 				</div>
+				{amountValid 
+					&& <Message type='error'>{ amountValid }</Message>
+					}
 
 				<div className="campo">
 					<label htmlFor="categoria">Category</label>
 					<select 
-						id="categoria" name='category' value={category} onChange={handleChange}>
+						id="categoria" name='category' value={category} onChange={ handleChange }>
 							<option value="">---Select---</option>
 							<option value="saving">Saving</option>
 							<option value="food">Food</option>
@@ -110,6 +113,9 @@ export const Modal = ({setModal, anmiateModal, setAnmiateModal, saveExpense }:pr
 							<option value="subscribes">Subscribes</option>
 						</select>
 				</div>
+				{categoryValid 
+					&& <Message type='error'>{ categoryValid }</Message>
+					}
 				<input type="submit" value="Add Expense" />
 			</form>
 			

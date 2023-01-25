@@ -5,12 +5,12 @@ export const patientReducer = (statePatient: typeof patientForm[], action:Action
 
 	switch (action.type) {
 		case '[PATIENT Add patient]':
-
 			return [...statePatient, action.payload ]
 
 		case '[PATIENT Update patient]':
-
-		const updatePatient = action.payload;
+			return statePatient.map( patient =>  patient.id=== action.payload.id ? action.payload : patient)//*Forma corta
+			
+					/* const updatePatient = action.payload;
 			statePatient.map( (patient) =>{
 				if (patient.id === action.payload.id){
 
@@ -21,7 +21,8 @@ export const patientReducer = (statePatient: typeof patientForm[], action:Action
 					patient.pet = updatePatient.pet;
 				}
 				return [...statePatient, action.payload ]
-			});
+			}); *///!Forma larga
+
 		case '[PATIENT Delete patient]':
 			return statePatient.filter(patient=> patient.id !== action.payload)
 

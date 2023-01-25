@@ -1,10 +1,23 @@
 import { useContext } from "react"
 import { FormContext } from "../context/FormContext"
-import { Message } from "./Message"
+import { Message } from "../helpers/Message"
+import { useForm } from "../hooks/useForm"
+import { IsBudgetForm, validField } from "../interfaces"
+
+const expenseForm:IsBudgetForm = {
+	budget: ""
+}
+
+const validForm: validField = {
+	budget: [(value: string) => Number(value) >= 1, "The field has an invalid budget"],
+}
 
 export const NewBudget = () => {
 
-	const {handleBuget, budget, handleChange, message} = useContext(FormContext)
+	const { budget, budgetValid, handleChange, isFormValid } = useForm<IsBudgetForm, validField>(expenseForm, validForm)
+
+	
+	const {handleBuget,  message} = useContext(FormContext)
 
 
 	return (
@@ -18,13 +31,14 @@ export const NewBudget = () => {
 						className="nuevo-presupuesto" 
 						type="number"
 						placeholder="Add your budget"
+						name="budget"
 						value={ budget }
 						onChange={ handleChange }
 						/>
 				</div>
 					<input type="submit" value="Add" />
 
-					{message && <Message type="error">{ message }</Message>}
+					{budgetValid && <Message type="error">{ budgetValid }</Message>}
 			</form>
 			</div>
 	)

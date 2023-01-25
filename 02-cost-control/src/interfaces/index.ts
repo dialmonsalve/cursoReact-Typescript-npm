@@ -1,3 +1,2 @@
-export type IsForm = {
-	[name:string]:string
-}
+export * from './isBudgetForm'
+export * from './isExpenseForm'

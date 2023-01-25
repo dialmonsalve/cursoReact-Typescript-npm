@@ -3,7 +3,7 @@ type props ={
 	title:string
 	propPatient:string
 }
-export const PatientParragraph = ( { title , propPatient }:props) => {
+export const PatientParagraph = ( { title , propPatient }:props) => {
 	return (
 
 		<p className="font-bold mb-3 text-gray-700 uppercase">{title}: {" "}
