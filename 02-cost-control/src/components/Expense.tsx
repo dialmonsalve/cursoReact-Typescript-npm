@@ -7,8 +7,13 @@ import Iconogastos from '../assets/icono_gastos.svg'
 import IconoOcio from '../assets/icono_ocio.svg'
 import IconoSalud from '../assets/icono_salud.svg'
 import IconoSuscripciones from '../assets/icono_suscripciones.svg'
+import { IsExpenseForm } from "../interfaces"
 
-const dictionaryIcons = {
+type dictionary = {
+	[field:string]:string
+}
+
+const dictionaryIcons:dictionary = {
 	saving:IconoAhorro,
 	food: IconoComida,
 	home: IconoCasa,
@@ -19,7 +24,7 @@ const dictionaryIcons = {
 }
 
 type props={
-	expense:{}
+	expense:IsExpenseForm
 }
 export const Expense = ({expense}:props) => {
 	return (
@@ -30,7 +35,7 @@ export const Expense = ({expense}:props) => {
 					<p className="categoria">{expense.category}</p>
 					<p className="nombre-gasto">{expense.name}</p>
 					<p className="fecha-gasto">
-						Add to: <span>{formatDate(expense.date)}</span>
+						Add to: <span>{formatDate((expense.date))}</span>
 					</p>
 				</div>
 			</div>

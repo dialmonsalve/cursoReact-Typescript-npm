@@ -1,9 +1,10 @@
 import  { useContext } from 'react'
-import { FormContext } from '../context/FormContext'
+import { ExpenseContext } from '../context/ExpenseContext'
 
 export const BudgeController = () => {
 
-	const { budget } = useContext(FormContext)
+	const { budget } = useContext( ExpenseContext )
+
 
 	const formatCant = (cant:number)=>{
 		return cant.toLocaleString('en-US',{

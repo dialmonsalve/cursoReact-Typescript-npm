@@ -1,11 +1,12 @@
+import { useContext } from 'react'
+import { ExpenseContext } from '../context/ExpenseContext'
 import { Expense } from './Expense'
 
-type props={
-	expenses:[]
-}
+export const ExpenseList = () => {
+
+	const {expenses} = useContext(ExpenseContext)
 
 
-export const ExpenseList = ({expenses}:props) => {
 	return (
 		<div className="listado-gastos contenedor">
 			<h2>{expenses.length ?  'Expenses': "No expenses yet"}</h2>
@@ -13,8 +14,8 @@ export const ExpenseList = ({expenses}:props) => {
 			{
 				expenses.map(expense =>(
 					<Expense
-						key={expense.id}
-						expense={expense}
+						key={ expense.id }
+						expense={ expense }
 					/>
 				))
 			}

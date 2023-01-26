@@ -7,7 +7,7 @@ export const generateId = () =>{
 	return `${random}${date}`
 }
 
-export const formatDate = (date: Date)=>{
+export const formatDate = (date: string)=>{
 
 	const newDate = new Date(date);
 

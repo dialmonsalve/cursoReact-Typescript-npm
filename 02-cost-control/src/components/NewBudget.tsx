@@ -1,29 +1,42 @@
 import { useContext } from "react"
-import { FormContext } from "../context/FormContext"
+import { ExpenseContext } from "../context/ExpenseContext"
 import { Message } from "../helpers/Message"
 import { useForm } from "../hooks/useForm"
 import { IsBudgetForm, validField } from "../interfaces"
 
 const expenseForm:IsBudgetForm = {
-	budget: ""
+	budget: '',
 }
 
 const validForm: validField = {
-	budget: [(value: string) => Number(value) >= 1, "The field has an invalid budget"],
+	budget: [(value:string) => Number(value) >= 1, "The field has an invalid budget"],
 }
 
 export const NewBudget = () => {
 
-	const { budget, budgetValid, handleChange, isFormValid } = useForm<IsBudgetForm, validField>(expenseForm, validForm)
+	const { addNewBudget } = useContext(ExpenseContext)
 
-	
-	const {handleBuget,  message} = useContext(FormContext)
+	const { 
+		budget ,formValidation:{ budgetValid } , onChangeForm, onResetForm,  isFormValid,
+		formSubmitted, onFormSubmitted } = useForm(expenseForm, validForm)
 
+	const onNewBuget = (e:React.FormEvent< HTMLFormElement>) =>{
+		e.preventDefault();
+
+		if( !isFormValid ){
+			onFormSubmitted(true)
+			return
+		}
+
+		addNewBudget(Number( budget ), isFormValid)
+		onResetForm()
+
+	}
 
 	return (
 		<div className="contenedor-presupuesto contenedor sombra">
 
-			<form onSubmit={  handleBuget } className="formulario">
+			<form onSubmit={ onNewBuget } className="formulario">
 				<div className="campo">
 					<label >Define your budget</label>
 
@@ -33,12 +46,12 @@ export const NewBudget = () => {
 						placeholder="Add your budget"
 						name="budget"
 						value={ budget }
-						onChange={ handleChange }
+						onChange={ onChangeForm }
 						/>
 				</div>
 					<input type="submit" value="Add" />
 
-					{budgetValid && <Message type="error">{ budgetValid }</Message>}
+					{ formSubmitted && budgetValid&& <Message type="error">{ budgetValid }</Message>}
 			</form>
 			</div>
 	)

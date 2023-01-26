@@ -1,34 +1,26 @@
-import { useForm } from '../../hooks/useForm'
-import {  IsExpenseForm, validFields } from '../../interfaces'
+import { useContext } from 'react'
+import {  useForm } from '../../hooks/useForm'
+import { ExpenseContext } from '../../context/ExpenseContext'
+
+import { expenseForm, validForm } from '../../interfaces'
+
 import { Message } from '../../helpers/Message'
 import closeBtn from '../../assets/cerrar.svg'
-import { IsCheckFields } from '../../interfaces/isExpenseForm'
 
 type props ={
 	anmiateModal:boolean,
 	setModal(modal:boolean):void,
 	setAnmiateModal(modal:boolean):void,
-	saveExpense(expense:IsExpenseForm):void
 }
 
-export const expenseForm:IsExpenseForm = {
-	name:"",
-	amount:"",
-	category:"",
-}
+export const Modal = ({anmiateModal, setModal, setAnmiateModal }:props) => {
 
-export const validForm: validFields = {
-	name: [(value:string) => value?.length >= 1, "Field name is requiered"],
-	amount: [(value:string) => Number(value) >= 1, "Field amount is requiered"],
-	category: [(value:string) => value.length >= 1, "Field amount is requiered"],
-}
-
-export const Modal = ({anmiateModal, setModal, setAnmiateModal, saveExpense }:props) => {
+	const { onAddExpense } = useContext(ExpenseContext)
 
 	const { 
-		formState, name, amount, category, handleChange, handleReset,
-		formValidation, nameValid, amountValid, categoryValid, isFormValid
-	} =useForm<IsExpenseForm, IsCheckFields>( expenseForm, validForm )
+		formState, name, amount, category, onChangeForm, onResetForm, onFormSubmitted,
+		formValidation:{ nameValid, amountValid, categoryValid,}, isFormValid, formSubmitted
+	} =useForm( expenseForm, validForm )
 
 	const hideModal = ()=>{
 		setAnmiateModal(false)		
@@ -37,19 +29,22 @@ export const Modal = ({anmiateModal, setModal, setAnmiateModal, saveExpense }:pr
 		}, 500);
 	}
 
-	const handleSubmit = (e:React.FormEvent<HTMLFormElement>) =>{
+	const onSubmit = (e:React.FormEvent<HTMLFormElement>) =>{
 
 		e.preventDefault();
 
-		if(isFormValid) {
-
-			setTimeout(() => {
-				handleReset()
-			}, 2000);
-			return;
+		if( !isFormValid ){
+			onFormSubmitted(true)
+			return
 		}
 
-		saveExpense({name, amount, category})
+		onAddExpense(formState)
+		onResetForm()
+		setAnmiateModal(false)
+		setTimeout(() => {
+			setModal(false)
+		}, 500);
+
 	}
 	
 	return (
@@ -57,14 +52,14 @@ export const Modal = ({anmiateModal, setModal, setAnmiateModal, saveExpense }:pr
 			<div className="cerrar-modal">
 
 				<img 
-					src={closeBtn}
+					src={ closeBtn }
 					alt="Close Modal"
 					onClick={hideModal}	
 				/>
 			</div>
 			<form 
 				className={`formulario ${anmiateModal ? 'animar' : 'cerrar'}`}
-				onSubmit={ handleSubmit }	
+				onSubmit={ onSubmit }	
 			>
 				<legend>New expense</legend>
 
@@ -76,13 +71,11 @@ export const Modal = ({anmiateModal, setModal, setAnmiateModal, saveExpense }:pr
 						placeholder="Add the expense name"
 						value={ name }
 						name="name"
-						onChange={handleChange}
+						onChange={ onChangeForm }
 
 					/>
 				</div>
-				{nameValid 
-					&& <Message type='error'>{ nameValid }</Message>
-					}
+				
 
 				<div className="campo">
 					<label htmlFor="cantidad">Amount</label>
@@ -92,17 +85,15 @@ export const Modal = ({anmiateModal, setModal, setAnmiateModal, saveExpense }:pr
 						placeholder="Add your expense amount eg:200"
 						name="amount"
 						value={ Number(amount) }
-						onChange={handleChange}
+						onChange={ onChangeForm }
 					/>
 				</div>
-				{amountValid 
-					&& <Message type='error'>{ amountValid }</Message>
-					}
+				
 
 				<div className="campo">
 					<label htmlFor="categoria">Category</label>
 					<select 
-						id="categoria" name='category' value={category} onChange={ handleChange }>
+						id="categoria" name='category' value={category} onChange={ onChangeForm }>
 							<option value="">---Select---</option>
 							<option value="saving">Saving</option>
 							<option value="food">Food</option>
@@ -113,11 +104,24 @@ export const Modal = ({anmiateModal, setModal, setAnmiateModal, saveExpense }:pr
 							<option value="subscribes">Subscribes</option>
 						</select>
 				</div>
-				{categoryValid 
-					&& <Message type='error'>{ categoryValid }</Message>
-					}
+				
 				<input type="submit" value="Add Expense" />
+				<div className='alertas'>
+					{
+						formSubmitted && nameValid && 
+						<Message type='error'>{ nameValid }</Message>
+					}
+					{
+						formSubmitted && amountValid && 
+						<Message type='error'>{ amountValid }</Message>
+					}
+					{
+						formSubmitted && categoryValid && 
+						<Message type='error'>{ categoryValid }</Message>
+					}
+				</div>
 			</form>
+			
 			
 		</div>
 	)
