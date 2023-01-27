@@ -1,48 +1,85 @@
-import { useReducer, useState } from "react"
-import { ActionTypes, IsExpenseForm } from "../interfaces"
-import { expenseReducer } from "./expenseReducer"
-import { ExpenseContext } from "./ExpenseContext"
-import { formatDate, generateId } from "../helpers"
+import { useEffect, useReducer, useState } from 'react';
 
-type props={
-	children: JSX.Element | JSX.Element[],
+import { ExpenseContext } from './ExpenseContext';
+import { expenseReducer } from './expenseReducer';
+import { ActionTypes, ExpenseForm } from '../interfaces';
+import { formatDate, generateId } from '../helpers';
+import { useFormBudget } from '../hooks';
+
+type props = {
+  children: JSX.Element | JSX.Element[];
+};
+
+const init = () => {
+  const value = localStorage.getItem('expenses')
+
+  if (typeof value === 'string') {
+    const expenses = JSON.parse(value)
+    return expenses
+  }
+  return []
+
 }
 
-export const FormProvider = ({children}:props) => {
+export const ExpenseProvider = ({ children }: props) => {
 
-	//Controlls the expenses form
-	const [expenses, dispatch] = useReducer(expenseReducer, [],)
+  const { budget, isFormValid, addNewBudget } = useFormBudget()
 
-	const onAddExpense = (expense:IsExpenseForm)=>{
-		const date =  new Date().getTime().toString()
+  const [expenseState, dispatch] = useReducer(expenseReducer, {}, init);
 
-		const action:ActionTypes = {
-			type:'[BUDGET Add budget]',
-			payload:{...expense, id:generateId(), date: formatDate(date)}
-		}
+  useEffect(() => {
+    localStorage.setItem('expenses', JSON.stringify(expenseState))
+  }, [expenseState])
 
-		dispatch(action)
-	}
+  const onAddExpense = (expense: ExpenseForm, amount: number) => {
 
-	//Controlls the budget form
-	const [budget, setBudget] = useState(0)
-	const [isFormValid, setIsFormValid] = useState(false)
+    const date = new Date().getTime()
+    const { amount: deletedString, ...newExpense } = expense
 
-	const addNewBudget =(budget:number, isFormValid:boolean) =>{
+    const actions: ActionTypes = {
+      type: '[BUDGET Add budget]',
+      payload: { ...newExpense, id: generateId(), date: formatDate(date), amount },
+    };
 
-		setBudget(budget);
-		setIsFormValid(isFormValid)
-	}
+    dispatch(actions);
+  };
 
-	return (
-		<ExpenseContext.Provider value={ { 
-				budget, 
-				isFormValid, 
-				expenses , 
-				addNewBudget, 
-				onAddExpense
-			}}>
-			{children}
-		</ExpenseContext.Provider>
-	)
-}
+  const onUpdateExpense = (expense: ExpenseForm) => {
+    const date = new Date().getTime().toString();
+
+    const actions: ActionTypes = {
+      type: '[BUDGET Update budget]',
+      payload: { ...expense, date }
+    }
+    dispatch(actions)
+  }
+  const onRemoveExpense = (id: string) => {
+    dispatch({
+      type: '[BUDGET Remove budget]',
+      payload: id
+    })
+  }
+
+  const onEditExpenseForm = (expense: ExpenseForm) =>{
+
+
+    console.log(expense)
+  }
+
+  return (
+    <ExpenseContext.Provider
+      value={{
+        budget,
+        isFormValid,
+        expenseState,
+        addNewBudget,
+        onAddExpense,
+        onUpdateExpense,
+        onRemoveExpense,
+        onEditExpenseForm
+      }}
+    >
+      {children}
+    </ExpenseContext.Provider>
+  );
+};

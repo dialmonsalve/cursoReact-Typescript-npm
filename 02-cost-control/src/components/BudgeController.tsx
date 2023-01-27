@@ -1,39 +1,35 @@
-import  { useContext } from 'react'
-import { ExpenseContext } from '../context/ExpenseContext'
+import { useContext } from 'react';
+import { ExpenseContext } from '../context/ExpenseContext';
+import { formatCant } from '../helpers';
 
 export const BudgeController = () => {
 
-	const { budget } = useContext( ExpenseContext )
+  const { budget } = useContext(ExpenseContext);
 
+  return (
+    <div className="contenedor-presupuesto contenedor sombra dos-columnas">
+      <div>
+        <p>Grafica aqui</p>
+      </div>
 
-	const formatCant = (cant:number)=>{
-		return cant.toLocaleString('en-US',{
-			style:'currency',
-			currency:'USD'
-		})
-	}
+      <div className="contenido-presupuesto">
+        <p>
+          <span>Budget: </span>
+          {formatCant(budget)}
+        </p>
 
-	return (
-		<div className='contenedor-presupuesto contenedor sombra dos-columnas'>
-			<div>
-				<p>Grafica aqui</p>
-			</div>
+        <p>
+          <span>Available: </span>
+          {formatCant(0)}
+        </p>
 
-			<div className='contenido-presupuesto'>
-				<p>
-					<span>Budget: </span>{ formatCant(budget) }
-				</p>
+        <p>
+          <span>Expends: </span>
+          {formatCant(0)}
+        </p>
+      </div>
+    </div>
+  );
+};
 
-				<p>
-					<span>Avalaible: </span>{ formatCant(0) }
-				</p>
-
-				<p>
-					<span>Expends: </span>{ formatCant(0) }
-				</p>
-
-			</div>
-		</div>
-
-	)
-}
+//rat my are not good

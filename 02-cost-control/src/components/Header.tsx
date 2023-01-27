@@ -1,57 +1,56 @@
+import { useContext, useState } from 'react';
 
-import { useContext, useState } from 'react'
-import { ExpenseContext } from '../context/ExpenseContext'
-import { BudgeController } from './BudgeController'
-import { NewBudget } from './NewBudget'
-import Iconewspend from '../assets/nuevo-gasto.svg'
-import { Modal } from './FormModal/Modal'
-import { ExpenseList } from './ExpenseList'
+import { Modal } from './FormModal/Modal';
+import { ExpenseContext } from '../context/ExpenseContext';
+import { ExpenseList } from './ExpenseList';
+import { NewBudget } from './NewBudget';
+import { BudgeController } from './BudgeController';
+
+import IconExpense from "../assets/nuevo-gasto.svg";
 
 export const Header = () => {
+  const [modal, setModal] = useState<boolean>(false);
+  const [animateModal, setAnimateModal] = useState(false);
 
-	const [ modal, setModal ] = useState<boolean>(false)
-	const [ anmiateModal, setAnmiateModal ] = useState(false)
+  const { isFormValid } = useContext(ExpenseContext);
 
-	const { isFormValid } = useContext(ExpenseContext)
+  const onNewSpend = () => {
+    setModal(true);
 
-	const handelNewSpend =() =>{
+    setTimeout(() => {
+      setAnimateModal(true);
+    }, 500);
+  };
 
-		setModal(true)
+  return (
+    <header className={modal ? "fijar" : ""}>
+      <h1>Expense planner</h1>
 
-		setTimeout(() => {
-			setAnmiateModal(true)
-		}, 500);
-	}
+      {isFormValid ? <BudgeController /> : <NewBudget />}
 
-	return (
-		<header className={modal ? 'fijar' : ''}>
-			<h1>Expense planner</h1>
+      {isFormValid && (
+        <>
+          <main>
+            <ExpenseList />
+          </main>
+          <div className="nuevo-gasto">
+            <img
+              src={IconExpense}
+              alt="Ico new sped"
+              onClick={onNewSpend}
+            />
+          </div>
+        </>
+      )}
 
-			{ isFormValid ? (<BudgeController/>) :( <NewBudget/>)}
-
-			{isFormValid &&(
-				<>
-					<main>
-						<ExpenseList/>
-					</main>
-					<div className="nuevo-gasto">
-						<img 
-							src={Iconewspend}
-							alt="Ico new sped"
-							onClick={ handelNewSpend } />
-
-					</div>
-				</>
-			)}
-
-			{modal && <Modal 
-				setModal={ setModal }
-				anmiateModal= { anmiateModal }
-				setAnmiateModal ={ setAnmiateModal }
-				/* saveExpense = {saveExpense} */
-				/>}
-			
-
-			</header>
-	)
-}
+      {modal && (
+        <Modal
+          setModal={setModal}
+          animateModal={animateModal}
+          setAnimateModal={setAnimateModal}
+          /* saveExpense = {saveExpense} */
+        />
+      )}
+    </header>
+  );
+};

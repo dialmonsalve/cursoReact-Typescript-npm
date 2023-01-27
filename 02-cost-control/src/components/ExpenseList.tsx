@@ -1,25 +1,18 @@
-import { useContext } from 'react'
-import { ExpenseContext } from '../context/ExpenseContext'
-import { Expense } from './Expense'
+import { useContext } from 'react';
+import { ExpenseContext } from '../context/ExpenseContext';
+import { Expense } from './Expense';
 
 export const ExpenseList = () => {
+  const { expenseState } = useContext(ExpenseContext);
 
-	const {expenses} = useContext(ExpenseContext)
+  return (
+    <div className="listado-gastos contenedor">
+      <h2>{expenseState.length ? "Expenses" : "No expenses yet"}</h2>
 
+      {expenseState.map((expense) => (
+        <Expense key={expense.id} expense={expense} />
+      ))}
+    </div>
+  );
+};
 
-	return (
-		<div className="listado-gastos contenedor">
-			<h2>{expenses.length ?  'Expenses': "No expenses yet"}</h2>
-
-			{
-				expenses.map(expense =>(
-					<Expense
-						key={ expense.id }
-						expense={ expense }
-					/>
-				))
-			}
-
-		</div>
-	)
-}
