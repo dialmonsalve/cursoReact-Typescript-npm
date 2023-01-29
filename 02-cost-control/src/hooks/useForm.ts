@@ -20,11 +20,8 @@ export const useForm = <T extends Form<string | number>>(
 		for (const formValue of Object.keys(formValidation)) {
 			if (formValidation[formValue] !== null) return false;
 		}
-
 		return true;
-
 	}, [formValidation])
-
 
 	const onChangeForm = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const { name, value } = e.target;
@@ -33,6 +30,10 @@ export const useForm = <T extends Form<string | number>>(
 			...formState,
 			[name]: value
 		});
+	}
+
+	const onEditForm = (formState: typeof initialForm) => {
+		setFormState(formState)
 	}
 
 	const onResetForm = () => {
@@ -54,15 +55,14 @@ export const useForm = <T extends Form<string | number>>(
 		setFormValidation(checkedValues);
 	}
 	const onFormSubmitted = (value: boolean) => {
-
 		setFormSubmitted(value)
-
 	}
 
 	return {
 		formState,
 		...formState,
 		onChangeForm,
+		onEditForm,
 		onResetForm,
 
 		formValidation,
@@ -74,7 +74,7 @@ export const useForm = <T extends Form<string | number>>(
 	}
 }
 
-export interface Form<T> {
+export type Form<T> = {
 	[name: string]: T;
 }
 
@@ -85,3 +85,16 @@ export type FormErrorMessages = {
 export interface FormFieldsValidation {
 	[formField: string]: [(value: any) => boolean, (null | string)]
 }
+
+interface hello<T>{
+	(arg:T):T,
+
+}
+
+const hello2:hello<number> = (arg)=>{
+
+	console.log(arg.toFixed(2))
+	return arg
+
+}
+

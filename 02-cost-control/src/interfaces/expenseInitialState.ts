@@ -2,7 +2,6 @@ import { ExpenseFormValidFields, ExpenseForm, } from "./ExpenseForm";
 
 //Initial state of the Expense form
 export const expenseForm: ExpenseForm = {
-	id:'',
 	expenseName: '',
 	amount: '',
 	category: '',

@@ -2,7 +2,6 @@ import { Form, FormErrorMessages,  FormFieldsValidation } from "../hooks/useForm
 
 //Interface to implement expense form
 export interface ExpenseForm extends Form<string | number>{
-	id:string,
 	expenseName:string,
 	amount:string | number,
 	category:string,
@@ -27,4 +26,5 @@ export type ActionTypes =
 	| { type: '[BUDGET Add budget]', payload: ExpenseForm }
 	| { type: '[BUDGET Update budget]', payload: ExpenseForm }
 	| { type: '[BUDGET Remove budget]', payload:string}
+	| { type: '[BUDGET RemoveAll budget]'}
 

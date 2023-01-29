@@ -1,11 +1,11 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ExpenseContext } from "../context/ExpenseContext";
 import { BudgetForm, BudgetFormValidField } from "../interfaces";
 import { useForm } from "../hooks/useForm";
 import { Message } from "../helpers/Message";
 
 const expenseForm: BudgetForm = {
-  budget: 0,
+  budget: localStorage.getItem('budget') ?? '',
 };
 
 const budgetFormValidation: BudgetFormValidField = {
@@ -16,7 +16,7 @@ const budgetFormValidation: BudgetFormValidField = {
 };
 
 export const NewBudget = () => {
-  const { addNewBudget } = useContext(ExpenseContext);
+  const [{  }, { addNewBudget }, ]= useContext(ExpenseContext);
 
   const {
     budget,
@@ -27,6 +27,12 @@ export const NewBudget = () => {
     formSubmitted,
     onFormSubmitted,
   } = useForm(expenseForm, budgetFormValidation);
+
+  useEffect(() => {
+    
+    localStorage.setItem('budget', budget.toString())  
+	
+  }, [budget])
 
   const onNewBudget = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

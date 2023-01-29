@@ -1,7 +1,7 @@
 import { Form, FormErrorMessages,  FormFieldsValidation } from "../hooks/useForm";
 
-export interface BudgetForm extends Form<number>{
-	budget:number,
+export interface BudgetForm extends Form<string>{
+	budget:string,
 }
 
 export interface BudgetFormValidField extends FormFieldsValidation {

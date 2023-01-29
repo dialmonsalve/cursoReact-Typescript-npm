@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useForm } from '../../hooks/useForm';
 import { ExpenseContext } from '../../context/ExpenseContext';
 
@@ -14,7 +14,12 @@ type props = {
 };
 
 export const Modal = ({ animateModal, setModal, setAnimateModal }: props) => {
-  const { onAddExpense } = useContext(ExpenseContext);
+
+  const [
+    { onAddExpense, onEditExpenseForm, onUpdateExpense },
+    { },
+    { stateEditExpenseForm }
+  ] = useContext(ExpenseContext);
 
   const {
     formState,
@@ -22,20 +27,20 @@ export const Modal = ({ animateModal, setModal, setAnimateModal }: props) => {
     amount,
     category,
     onChangeForm,
-    onResetForm,
+    onEditForm,
     onFormSubmitted,
+    onResetForm,
     formValidation: { amountValid, expenseNameValid, categoryValid },
     isFormValid,
     formSubmitted,
   } = useForm(expenseForm, expenseFormValidation);
 
-  const hideModal = () => {
-    setAnimateModal(false);
-    setTimeout(() => {
-      setModal(false);
-    }, 500);
-  };
+  useEffect(() => {
 
+    if (stateEditExpenseForm.id) {
+      onEditForm(stateEditExpenseForm)
+    }
+  }, [])
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,13 +49,21 @@ export const Modal = ({ animateModal, setModal, setAnimateModal }: props) => {
       onFormSubmitted(true);
       return;
     }
+    if (stateEditExpenseForm.id) {
+      onUpdateExpense(formState);
+    } else {
+      onAddExpense(formState);
+    }
+    onResetForm()
 
-    onAddExpense({...formState}, Number(amount));
-    onResetForm();
+    hideModal()
+  };
 
+  const hideModal = () => {
     setAnimateModal(false);
     setTimeout(() => {
       setModal(false);
+      onEditExpenseForm(expenseForm);
     }, 500);
   };
 
@@ -63,7 +76,7 @@ export const Modal = ({ animateModal, setModal, setAnimateModal }: props) => {
         className={`formulario ${animateModal ? "animar" : "cerrar"}`}
         onSubmit={onSubmit}
       >
-        <legend>New expense</legend>
+        <legend>{`${stateEditExpenseForm.expenseName ? 'Edit expense' : 'New expense'}  `}</legend>
 
         <div className="campo">
           <label htmlFor="campo">Name Expense</label>
@@ -84,7 +97,7 @@ export const Modal = ({ animateModal, setModal, setAnimateModal }: props) => {
             type="number"
             placeholder="Add your expense amount eg:200"
             name="amount"
-            value={ amount}
+            value={amount}
             onChange={onChangeForm}
           />
         </div>
@@ -108,7 +121,8 @@ export const Modal = ({ animateModal, setModal, setAnimateModal }: props) => {
           </select>
         </div>
 
-        <input type="submit" value="Add Expense" />
+        <input type="submit"
+          value={`${stateEditExpenseForm.expenseName ? 'Save' : 'Add'}  `} />
         <div className="alertas">
           {formSubmitted && expenseNameValid && (
             <Message type="error">{expenseNameValid}</Message>

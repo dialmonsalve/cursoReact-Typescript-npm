@@ -7,14 +7,15 @@ export const expenseReducer = (state: typeof expenseForm[], action: ActionTypes)
 			return [...state, action.payload];
 
 		case '[BUDGET Update budget]':
-			throw new Error('Not implemented yet')
+			return state.map( expense =>  expense.id === action.payload.id ? action.payload : expense)
 
 		case '[BUDGET Remove budget]':
 			return state.filter(expense => expense.id !== action.payload)
 
+		case '[BUDGET RemoveAll budget]':
+			return []
+
 		default:
 			return state;
 	}
-
-
 }

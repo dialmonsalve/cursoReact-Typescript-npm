@@ -7,7 +7,6 @@ import {
 } from 'react-swipeable-list';
 import 'react-swipeable-list/dist/styles.css'
 import { ExpenseForm } from '../interfaces';
-import { formatDate } from '../helpers';
 
 import IconoAhorro from '../assets/icono_ahorro.svg';
 import IconoCasa from '../assets/icono_casa.svg';
@@ -36,9 +35,9 @@ const dictionaryIcons: Dictionary = {
 type props = {
   expense: ExpenseForm;
 };
-export const Expense = ({ expense }: props) => {
+export const Expense = ({ expense, expense:{id, amount, category, date, expenseName} }: props) => {
 
-  const { onRemoveExpense, onEditExpenseForm } = useContext(ExpenseContext);
+  const [{ onRemoveExpense, onEditExpenseForm }] = useContext(ExpenseContext);
 
   const leadingActions = () => (
     <LeadingActions>
@@ -51,7 +50,8 @@ export const Expense = ({ expense }: props) => {
   const trailingActions = () => (
     <TrailingActions>
       <SwipeAction
-        onClick={ () => onRemoveExpense(expense.id) }
+        onClick={ () => onRemoveExpense(id.toString()) }
+        destructive={true}
       >
         Delete
       </SwipeAction>
@@ -67,17 +67,17 @@ export const Expense = ({ expense }: props) => {
 
         <div className="gasto sombra">
           <div className="contenido-gasto">
-            <img src={dictionaryIcons[expense.category]} alt="Expense Icon" />
+            <img src={dictionaryIcons[category]} alt="Expense Icon" />
             <div className="descripcion-gasto">
-              <p className="categoria">{expense.category}</p>
-              <p className="nombre-gasto">{expense.expenseName}</p>
+              <p className="categoria">{category}</p>
+              <p className="nombre-gasto">{expenseName}</p>
               <p className="fecha-gasto">
-                Add to: <span>{expense.date}</span>
+                Add to: <span>{date}</span>
               </p>
             </div>
           </div>
 
-          <p className="cantidad-gasto">${expense.amount}</p>
+          <p className="cantidad-gasto">${amount}</p>
         </div>
       </SwipeableListItem>
     </SwipeableList>
