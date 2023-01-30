@@ -1,7 +1,9 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 
-import { Form } from './Form'
-import ImagenCripto from '../assets/imagen-criptos.png'
+import { Form, Result } from './';
+import { Spinner } from './Spinner';
+import ImagenCripto from '../assets/imagen-criptos.png';
+import { useHeader } from '../hooks';
 
 const Container = styled.div`
 	max-width: 900px;
@@ -11,9 +13,10 @@ const Container = styled.div`
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		column-gap: 2rem;
-}
+};
 `
-const Heading = styled.h1 `
+
+const Heading = styled.h1`
 	font-family: 'lato', sans-serif;
 	color: #FFF;
 	text-align: center;
@@ -29,8 +32,9 @@ const Heading = styled.h1 `
 		background-color: #66A2FE;
 		display:block;
 		margin: 10px auto 0
-}
+};
 `
+
 const Image = styled.img`
 	max-width: 400px;
 	width: 80%;
@@ -40,17 +44,23 @@ const Image = styled.img`
 
 export const Header = () => {
 
+	const { load, onNewSearch, resultApi } = useHeader();
 
 	return (
 		<Container>
 			<Image
-				src={ ImagenCripto }
+				src={ImagenCripto}
 				alt="Cryptocurrency Image"
 			/>
 			<div>
 				<Heading>Quote cryptocurrencies instantly</Heading>
-				<Form/>
+				<Form
+					onNewSearch={onNewSearch}
+				/>
+				{load && <Spinner />}
+				{resultApi.PRICE && <Result resultApi={resultApi} />}
+
 			</div>
 		</Container>
-	)
-}
+	);
+};

@@ -1,8 +1,15 @@
-import styled from '@emotion/styled'
-import { useEffect, useState } from 'react'
-import { coins } from '../data/coins'
-import { useSelectCoins } from '../hooks/useSelectCoins'
-import { Cryptocurrency } from '../interfaces/CryptoCurrency'
+import styled from '@emotion/styled';
+
+import { Error } from './'
+import { useForm } from '../hooks';
+
+type Currencies = {
+	currency:string | (() => JSX.Element),
+	cryptocurrency:string | (() => JSX.Element)
+};
+type Props = {
+	onNewSearch(currencies:Currencies):void
+};
 
 const InputSubmit = styled.input`
 	background-color:#9497FF;
@@ -20,49 +27,43 @@ const InputSubmit = styled.input`
 		&:hover{
 			background-color: #7A7DEF;
 			cursor: pointer;
-}
+		};
 `
-export const Form = () => {
+export const Form = ({ onNewSearch }:Props) => {
+	const {
+		error, 
+		SelectCoins, 
+		SelectCryptocurrency, 
+		currency,
+		cryptocurrency, 
+		setError  
+	} =  useForm();
 
-	const [cryptos, setCryptos] = useState([])
+	const onSubmit = (e:React.FormEvent<HTMLFormElement>) =>{
+		e.preventDefault();
 
-	const [ currency, SelectCoins ] = useSelectCoins('Quote your currency', coins)
-	const [ cryptocurrency, SelectCryptocurrency ] = useSelectCoins('Quote your cryptocurrency', cryptos)
+		if([currency,cryptocurrency].includes('')){
+			setError(true);
+			return;
+		}
+		setError(false)
 
-	const consultApi = async () => {
-
-		const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=20&tsym=USD'
-
-		const response = await fetch(url)
-		const result:Cryptocurrency = await response.json()
-
-		const arrayCrypto = result.Data.map( crypto =>{
-			const obj = {
-				id:crypto.CoinInfo.Name,
-				name: crypto.CoinInfo.FullName
-			}
-			return obj;
-		})
-
-		setCryptos(arrayCrypto)
-
-	}
-
-	useEffect(() => {
-
-		consultApi()
-	
-	}, [])
-	
-
+		onNewSearch({
+			currency,
+			cryptocurrency
+		});
+	};
 
 	return (
-		<form>
-			<SelectCoins/>
-			<SelectCryptocurrency/>
+		<>
+			{error && <Error>All fields are required</Error>}
 
-			{/* <SelectCryptoCurrency/> */}
-			<InputSubmit type="submit" value="Quote" />
-		</form>
-	)
-}
+			<form onSubmit={ onSubmit }>
+				<SelectCoins/>
+				<SelectCryptocurrency/>
+
+				<InputSubmit type="submit" value="Quote" />
+			</form>
+		</>
+	);
+};

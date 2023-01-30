@@ -1,4 +1,4 @@
-export interface Cryptocurrency {
+export interface CRYPTOCURRENCY {
   Message: string;
   Type: number;
   MetaData: MetaData;
@@ -18,61 +18,61 @@ interface Datum {
 }
 
 interface DISPLAY {
-  USD: USD2;
+  USD: RESULT2;
 }
 
-interface USD2 {
+interface RESULT2 {
+  CHANGE24HOUR: string;
+  CHANGEDAY: string;
+  CHANGEHOUR: string;
+  CHANGEPCT24HOUR: string;
+  CHANGEPCTDAY: string;
+  CHANGEPCTHOUR: string;
+  CIRCULATINGSUPPLY: string;
+  CIRCULATINGSUPPLYMKTCAP: string;
+  CONVERSIONSYMBOL: string;
+  CONVERSIONTYPE: string;
   FROMSYMBOL: string;
-  TOSYMBOL: string;
-  MARKET: string;
-  PRICE: string;
+  HIGH24HOUR: string;
+  HIGHDAY: string;
+  HIGHHOUR: string;
+  IMAGEURL: string;
+  LASTMARKET: string;
+  LASTTRADEID: string;
   LASTUPDATE: string;
   LASTVOLUME: string;
   LASTVOLUMETO: string;
-  LASTTRADEID: string;
-  VOLUMEDAY: string;
-  VOLUMEDAYTO: string;
-  VOLUME24HOUR: string;
-  VOLUME24HOURTO: string;
-  OPENDAY: string;
-  HIGHDAY: string;
-  LOWDAY: string;
-  OPEN24HOUR: string;
-  HIGH24HOUR: string;
   LOW24HOUR: string;
-  LASTMARKET: string;
-  VOLUMEHOUR: string;
-  VOLUMEHOURTO: string;
-  OPENHOUR: string;
-  HIGHHOUR: string;
+  LOWDAY: string;
   LOWHOUR: string;
-  TOPTIERVOLUME24HOUR: string;
-  TOPTIERVOLUME24HOURTO: string;
-  CHANGE24HOUR: string;
-  CHANGEPCT24HOUR: string;
-  CHANGEDAY: string;
-  CHANGEPCTDAY: string;
-  CHANGEHOUR: string;
-  CHANGEPCTHOUR: string;
-  CONVERSIONTYPE: string;
-  CONVERSIONSYMBOL: string;
-  SUPPLY: string;
+  MARKET: string;
   MKTCAP: string;
   MKTCAPPENALTY: string;
-  CIRCULATINGSUPPLY: string;
-  CIRCULATINGSUPPLYMKTCAP: string;
-  TOTALVOLUME24H: string;
-  TOTALVOLUME24HTO: string;
+  OPEN24HOUR: string;
+  OPENDAY: string;
+  OPENHOUR: string;
+  PRICE: string;
+  SUPPLY: string;
+  TOPTIERVOLUME24HOUR: string;
+  TOPTIERVOLUME24HOURTO: string;
+  TOSYMBOL: string;
   TOTALTOPTIERVOLUME24H: string;
   TOTALTOPTIERVOLUME24HTO: string;
-  IMAGEURL: string;
+  TOTALVOLUME24H: string;
+  TOTALVOLUME24HTO: string;
+  VOLUME24HOUR: string;
+  VOLUME24HOURTO: string;
+  VOLUMEDAY: string;
+  VOLUMEDAYTO: string;
+  VOLUMEHOUR: string;
+  VOLUMEHOURTO: string;
 }
 
 interface RAW {
-  USD: USD;
+  USD: RESULT;
 }
 
-interface USD {
+interface RESULT {
   TYPE: string;
   MARKET: string;
   FROMSYMBOL: string;

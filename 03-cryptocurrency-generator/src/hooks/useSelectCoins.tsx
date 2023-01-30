@@ -1,6 +1,6 @@
-import styled from '@emotion/styled'
-import React, { useState } from 'react'
-import { Coins } from '../interfaces'
+import { useState } from 'react';
+import styled from '@emotion/styled';
+import { COINS } from '../interfaces';
 
 const Label = styled.label`
 	color:#fff;
@@ -18,10 +18,9 @@ const Select = styled.select`
 	text-align:center;
 `
 
+export const useSelectCoins = (label:string, options:COINS[]) => {
 
-export const useSelectCoins = (label:string, options:Coins) => {
-
-	const [state, setState] = useState('')
+	const [state, setState] = useState('');
 
 	const SelectCoins = () => (
 		<>
@@ -47,5 +46,5 @@ export const useSelectCoins = (label:string, options:Coins) => {
 	return [
 		state,
 		SelectCoins,
-	]
-}
+	];
+};
